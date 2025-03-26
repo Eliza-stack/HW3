@@ -1,28 +1,31 @@
-import { createContext, useContext, useState } from 'react';
-import { Parent } from './components/Context';
-import Main from './components/Main';
-
-//Prop Drilling
-
-const GreatGrandchild = ({ count }) => {
-  return <h2>Счетчик: {count}</h2>
-}
-
-const Grandchid = ({ count }) => <GreatGrandchild count={count} />
-
-const Child = ({count}) => <Grandchid count={count} />
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
+import Home from "./pages/Home"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import Cart from "./pages/Cart"
+import Favorites from "./pages/Favorites"
+import Register from "./pages/Register"
+import Login from "./pages/Login"
+import Navbar from "./components/Navbar"
+import Checkout from "./pages/Checkout"
 
 
-function App() {
-  const [count, setCount] = useState(0)
 
+const queryClient = new QueryClient()
+
+export default function App() {
   return (
-    <div className="App">
-      {/* <Child count={count} /> */}
-      {/* <Parent /> */}
-      <Main />
-    </div>
-  );
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/checkout" element={<Checkout />} />
+        </Routes>      
+      </BrowserRouter>
+    </QueryClientProvider>
+  )
 }
-
-export default App;
