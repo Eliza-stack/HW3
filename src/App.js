@@ -7,6 +7,7 @@ import Register from "./pages/Register"
 import Login from "./pages/Login"
 import Navbar from "./components/Navbar"
 import Checkout from "./pages/Checkout"
+import Orders from './pages/Orders'; 
 
 
 
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/orders" element={<Orders />} />
         </Routes>      
       </BrowserRouter>
     </QueryClientProvider>

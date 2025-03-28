@@ -1,53 +1,72 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware"
+import { persist } from "zustand/middleware";
 
 export const useFilters = create((set) => ({
-    type: 'all',
-    setType: (type) => set({type})
-}))
+  type: "all",
+  setType: (type) => set({ type }),
+}));
 
-export const useStoreProject = create(persist((set) => ({
-    cart: [],
-    favorites: [],
-    addToCart: (product) =>
+export const useStoreProject = create(
+  persist(
+    (set) => ({
+      cart: [],
+      favorites: [],
+      addToCart: (product) =>
         set((state) => ({ cart: [...state.cart, product] })),
-    addToFavorites: (product) => 
-        set((state) => ({favorites: [...state.favorites, product]}))
-}), { name: 'store' }))
-
-
+      addToFavorites: (product) =>
+        set((state) => ({ favorites: [...state.favorites, product] })),
+    }),
+    { name: "store" }
+  )
+);
 
 export const useAuthStore = create((set, get) => {
-    const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+  const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
 
-    return {
-        user: null,
-        users: storedUsers,
-        register: (newUser) => {
-            const { users } = get();
-            const userExists = users.some((user) => user.username === newUser.username || user.email === newUser.email)
+  return {
+    user: null,
+    users: storedUsers,
+    register: (newUser) => {
+      const { users } = get();
+      const userExists = users.some(
+        (user) =>
+          user.username === newUser.username || user.email === newUser.email
+      );
 
-            if (userExists) {
-                alert("Пользователь с таким логином или email уже существует!")
-            }
+      if (userExists) {
+        alert("Пользователь с таким логином или email уже существует!");
+        return;
+      }
 
-            const updatedUsers = [...users, newUser];
-            localStorage.setItem("users", JSON.stringify(updatedUsers))
+      const updatedUsers = [...users, newUser];
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
 
-            set({ users: updatedUsers })
-            return null;
-        },
-        login: (username, password) => {
-            const { users } = get();
-            const foundUser = users.find((user) => user.username === username && user.password === password);
+      set({ users: updatedUsers });
+    },
+    login: (username, password) => {
+      const { users } = get();
+      const foundUser = users.find(
+        (user) => user.username === username && user.password === password
+      );
 
-            if (!foundUser) {
-                alert("Неправильный логин или пароль!");
-            }
+      if (!foundUser) {
+        alert("Неправильный логин или пароль!");
+        return;
+      }
 
-            set({ user: foundUser });
-            return null;
-        },
-        logout: () => set({ user: null })
-    }
-})
+      set({ user: foundUser });
+    },
+    logout: () => set({ user: null }),
+  };
+});
+
+export const useOrderStore = create(
+  persist(
+    (set) => ({
+      orders: [],
+      addOrder: (order) =>
+        set((state) => ({ orders: [...state.orders, order] })),
+    }),
+    { name: "orders" }
+  )
+);
