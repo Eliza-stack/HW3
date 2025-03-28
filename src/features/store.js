@@ -11,10 +11,20 @@ export const useStoreProject = create(
     (set) => ({
       cart: [],
       favorites: [],
+
       addToCart: (product) =>
         set((state) => ({ cart: [...state.cart, product] })),
+      removeFromCart: (product) =>
+        set((state) => ({
+          cart: state.cart.filter((item) => item.id !== product.id),
+        })),
+
       addToFavorites: (product) =>
         set((state) => ({ favorites: [...state.favorites, product] })),
+      removeFromFavorites: (product) =>
+        set((state) => ({
+          favorites: state.favorites.filter((item) => item.id !== product.id),
+        })),
     }),
     { name: "store" }
   )
@@ -26,6 +36,7 @@ export const useAuthStore = create((set, get) => {
   return {
     user: null,
     users: storedUsers,
+
     register: (newUser) => {
       const { users } = get();
       const userExists = users.some(
@@ -43,6 +54,7 @@ export const useAuthStore = create((set, get) => {
 
       set({ users: updatedUsers });
     },
+
     login: (username, password) => {
       const { users } = get();
       const foundUser = users.find(
@@ -56,6 +68,7 @@ export const useAuthStore = create((set, get) => {
 
       set({ user: foundUser });
     },
+
     logout: () => set({ user: null }),
   };
 });

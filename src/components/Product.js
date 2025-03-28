@@ -1,49 +1,56 @@
+import React from "react";
+import { Button, Card } from "antd";
 import { HeartOutlined, ShoppingCartOutlined } from "@ant-design/icons";
-import { Card, Image } from "antd";
-import { useState } from "react";
-import style from './components.module.css'
 import { useStoreProject } from "../features/store";
 
-
 const Product = ({ product }) => {
-    const { addToCart, addToFavorites } = useStoreProject();
-    
-    const [clickedCart, setClickedCart] = useState(false)
-    const [clickedFavorite, setClickedFavorite] = useState(false)
+  const {
+    addToCart,
+    removeFromCart,
+    addToFavorites,
+    removeFromFavorites,
+    cart,
+    favorites,
+  } = useStoreProject();
+  const isInCart = cart.some((item) => item.id === product.id);
+  const isInFavorites = favorites.some((item) => item.id === product.id);
 
-    const addCart = () => {
-        setClickedCart(!clickedCart)
-        addToCart(product)
+  const handleCartClick = () => {
+    if (isInCart) {
+      removeFromCart(product);
+    } else {
+      addToCart(product);
     }
+  };
 
-    const addFavorites = () => {
-        setClickedFavorite(!clickedFavorite)
-        addToFavorites(product)
+  const handleFavoriteClick = () => {
+    if (isInFavorites) {
+      removeFromFavorites(product);
+    } else {
+      addToFavorites(product);
     }
+  };
 
-    console.log(product);
-    
-
-    return (
-        <Card className={style.card} title={product.title} cover={<Image className={style.image} src={product.thumbnail} alt={product.title} />}>
-            <div className={style.content}>
-                <p className={style.price}>Цена: {product.price}</p>
-                <p className={style.rating}>Рейтинг: {product.rating}</p>
-                <div style={{fontSize: '20px', display:"flex", justifyContent: 'space-between'}}>
-                    <ShoppingCartOutlined
-                        onClick={addCart}
-                        style={{ cursor: 'pointer' }}
-                        className={clickedCart ? style.clickedCart : ''}
-                    />
-                    <HeartOutlined
-                        onClick={addFavorites}
-                        style={{ cursor: 'pointer' }}
-                        className={clickedFavorite ? style.clickedFavorite : ''}
-                    />
-                </div>
-            </div>
-        </Card>
-    )
-}
+  return (
+    <Card
+      title={product.title}
+      cover={<img alt={product.title} src={product.thumbnail} />}
+    >
+      <p>Цена: {product.price}</p>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Button
+          icon={<ShoppingCartOutlined />}
+          onClick={handleCartClick}
+          style={{ color: isInCart ? "green" : "black" }}
+        />
+        <Button
+          icon={<HeartOutlined />}
+          onClick={handleFavoriteClick}
+          style={{ color: isInFavorites ? "red" : "black" }}
+        />
+      </div>
+    </Card>
+  );
+};
 
 export default Product;
